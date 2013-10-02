@@ -22,25 +22,28 @@ import java.util.logging.Logger;
  *
  * @author zatokar
  */
-public class HTTPServer implements Runnable {
+public class HTTPServer  {
 
-    Socket connectionSocket;
+    private static Socket connectionSocket;
     public final static int SERVER_PORT = 8888;
     private static final String ROOT_CATALOG = "C:/project";
     public static final String CRLF = "\r\n";
+   
 public HTTPServer(Socket connection)
 {
-    connectionSocket=connection;
+  connectionSocket=connection; 
     }
-    @Override
-    public void run() {
+  public void run() {
+         try {
+           
 while (true) {
-            BufferedReader fromClient = null;
-            try {
-                fromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+              
+                BufferedReader fromClient = new BufferedReader(
+                        new InputStreamReader(connectionSocket.getInputStream()));
                 String request = fromClient.readLine();
                 String[] parts = request.split(" ");
                 String filename = parts[1];
+                System.out.println(filename);
                 OutputStream output = connectionSocket.getOutputStream();
                 try {
                     FileInputStream file = new FileInputStream(ROOT_CATALOG + filename);
@@ -48,24 +51,20 @@ while (true) {
                     output.write(CRLF.getBytes());
                     output.write("BODY IS HERE".getBytes());
                     output.flush();
+                    connectionSocket.close();
                     
-                } catch (FileNotFoundException ex) {
-                    output.write(("HTTP/1.0 404 Not found:  /doesNotExist.html" + CRLF).getBytes());
+               } catch (FileNotFoundException ex) {
+                   output.write(("HTTP/1.0 404 Not found: /doesNotExist.html").getBytes());
                     output.flush();
-                  //connectionSocket.close();
+                  connectionSocket.close();
                 }
-                System.out.println(filename);
-            } catch (IOException ex) {
-                Logger.getLogger(HTTPServer.class.getName()).log(Level.SEVERE, null, ex);
-//            } finally {
-//                try {
-//                    fromClient.close();
-//                } catch (IOException ex) {
-//                    Logger.getLogger(HTTPServer.class.getName()).log(Level.SEVERE, null, ex);
-//                }
       }
         }
+         catch (IOException ex) {
+            System.err.println("Connection closed" + ex);
+        }
     }
+    
 private static void copy(final InputStream input, final OutputStream output) throws IOException {
         final byte[] buffer = new byte[1024];
         while (true) {

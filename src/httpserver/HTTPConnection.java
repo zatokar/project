@@ -23,8 +23,9 @@ public class HTTPConnection {
                 System.out.println("Waiting for connection");
                 Socket connectionSocket = welcomeSocket.accept();
                 HTTPServer connection=new HTTPServer(connectionSocket);
-                Thread connectionThread=new Thread(connection);
-                connectionThread.start();
+                connection.run();
+                //Thread connectionThread=new Thread(connection);
+                //connectionThread.start();
                 System.out.println("Connection has been made");
      }
      } catch (IOException ex) {
