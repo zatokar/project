@@ -60,7 +60,7 @@ public class HTTPServer {
             if (bytesRead == -1) {
                 break;
             }
-            output.write(buffer, 0, bytesRead);
-        }dsafsa
+            //output.write(buffer, 0, bytesRead);
+        }
     }
 }
