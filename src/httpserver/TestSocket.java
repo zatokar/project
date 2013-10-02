@@ -18,7 +18,7 @@ public class TestSocket {
       
     while(true){
     Socket connectionSocket=welcomeSocket.accept();
-    Server si=new Server(connectionSocket);
+    HTTPServer si=new HTTPServer(connectionSocket);
     si.run();
 }
     }
