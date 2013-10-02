@@ -21,6 +21,7 @@ public class HTTPServer {
   Socket connectionSocket;
     public final static int Server_Port = 8888;
      private static final String ROOT_CATALOG = "C:/project";
+     public static final String CRLF="\r\n";
     /**
      * @param args the command line arguments
      */
@@ -40,8 +41,8 @@ public class HTTPServer {
                 String filename = parts[1];
                 System.out.println(filename);
                 OutputStream output = connectionSocket.getOutputStream();
-                output.write("HTTP/1.0 200 OK\r\n".getBytes());
-                output.write("\r\n".getBytes());
+                output.write(("HTTP/1.0 200 OK"+CRLF).getBytes());
+                output.write(CRLF.getBytes());
                 output.write("BODY IS HERE".getBytes());
                 output.flush();
                 connectionSocket.close();
