@@ -19,13 +19,14 @@ public class HTTPConnection {
         try {
             ServerSocket welcomeSocket = new ServerSocket(SERVER_PORT);
      while (true) {
+         
                 System.out.println("Waiting for connection");
                 Socket connectionSocket = welcomeSocket.accept();
                 HTTPServer connection=new HTTPServer(connectionSocket);
                 Thread connectionThread=new Thread(connection);
                 connectionThread.start();
                 System.out.println("Connection has been made");
-}
+     }
      } catch (IOException ex) {
             System.err.println("Connection closed" + ex);
         }
