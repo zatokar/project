@@ -20,6 +20,7 @@ import java.net.Socket;
 public class HTTPServer {
   Socket connectionSocket;
     public final static int Server_Port = 8888;
+     private static final String ROOT_CATALOG = "C:/project";
     /**
      * @param args the command line arguments
      */
