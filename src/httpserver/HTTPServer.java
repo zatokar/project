@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author zatokar
  */
-public class HTTPServer  {
+public class HTTPServer  implements Runnable{
 
     private static Socket connectionSocket;
     public final static int SERVER_PORT = 8888;
@@ -33,7 +33,8 @@ public HTTPServer(Socket connection)
 {
   connectionSocket=connection; 
     }
-  public void run() {
+    @Override
+      public void run() {
          try {
            
 while (true) {
@@ -56,7 +57,7 @@ while (true) {
                } catch (FileNotFoundException ex) {
                    output.write(("HTTP/1.0 404 Not found: /doesNotExist.html").getBytes());
                     output.flush();
-                  connectionSocket.close();
+                 connectionSocket.close();
                 }
       }
         }
