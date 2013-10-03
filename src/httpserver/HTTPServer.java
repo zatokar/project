@@ -5,8 +5,10 @@
 package httpserver;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class HTTPServer  implements Runnable{
 
-    private static Socket connectionSocket;
-    public final static int SERVER_PORT = 8888;
-    private static final String ROOT_CATALOG = "C:/project";
+    private  Socket connectionSocket;
+    public  static int SERVER_PORT = 8080;
+    private  final String ROOT_CATALOG = "C:/project";
     public static final String CRLF = "\r\n";
    
 public HTTPServer(Socket connection)
@@ -36,30 +38,30 @@ public HTTPServer(Socket connection)
     @Override
       public void run() {
          try {
-           
-while (true) {
-              
                 BufferedReader fromClient = new BufferedReader(
                         new InputStreamReader(connectionSocket.getInputStream()));
                 String request = fromClient.readLine();
-                String[] parts = request.split(" ");
+                //System.out.println(request);
+                String[] parts = request.split(" ",-3);
                 String filename = parts[1];
                 System.out.println(filename);
                 OutputStream output = connectionSocket.getOutputStream();
                 try {
                     FileInputStream file = new FileInputStream(ROOT_CATALOG + filename);
-                    output.write(("HTTP/1.0 200 OK" + CRLF).getBytes());
+                      copy(file,output);
+//                    output.write(("HTTP/1.0 200 OK" + CRLF).getBytes());
+//                    output.write(CRLF.getBytes());
+//                    output.write(("BODY IS HERE"+CRLF).getBytes());
                     output.write(CRLF.getBytes());
-                    output.write("BODY IS HERE".getBytes());
                     output.flush();
-                    connectionSocket.close();
+                    output.close();
                     
                } catch (FileNotFoundException ex) {
-                   output.write(("HTTP/1.0 404 Not found: /doesNotExist.html").getBytes());
+                    output.write(("HTTP/1.0 404 Not found: /doesNotExist.html").getBytes());
                     output.flush();
-                 connectionSocket.close();
+                    output.close();
                 }
-      }
+      
         }
          catch (IOException ex) {
             System.err.println("Connection closed" + ex);
@@ -76,4 +78,5 @@ private static void copy(final InputStream input, final OutputStream output) thr
             output.write(buffer, 0, bytesRead);
         }
     }
+
 }
